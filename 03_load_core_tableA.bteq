@@ -1,0 +1,23 @@
+-- DUMMY TEST DATA ONLY
+-- BTEQ-style downstream load: stg.tableA -> core.tableA
+-- No real connection details or credentials are included.
+
+.LOGON dummy_server/dummy_user,dummy_password;
+
+CREATE TABLE core.tableA AS
+(
+    SELECT
+        customer_id,
+        customer_name,
+        customer_status,
+        transaction_amount,
+        load_date,
+        load_source
+    FROM stg.tableA
+) WITH DATA
+PRIMARY INDEX (customer_id);
+
+.IF ERRORCODE <> 0 THEN .QUIT ERRORCODE;
+
+.LOGOFF;
+.QUIT 0
